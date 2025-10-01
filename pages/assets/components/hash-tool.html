@@ -1,0 +1,206 @@
+<!-- 哈希计算工具 -->
+<div id="hash" class="tool-section" style="display: none;">
+    <div class="tool-header">
+        <h2 style="font-size: 1.25rem; font-weight: 700; display: flex; align-items: center;">
+            <i class="fa fa-shield" style="color: var(--primary); margin-right: 0.5rem;"></i>
+            <span data-i18n="hash-generator">哈希计算</span>
+        </h2>
+        <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.25rem;" data-i18n="hash-desc">支持MD5、SHA系列哈希算法，HMAC计算，文件哈希</p>
+    </div>
+
+    <div class="tool-content">
+        <!-- 输入方式选择 -->
+        <div style="margin-bottom: 1.5rem;">
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <label style="display: flex; align-items: center; gap: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <input type="radio" name="hash-input-type" value="text" checked style="margin: 0;">
+                    <span data-i18n="text-input">文本输入</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <input type="radio" name="hash-input-type" value="file" style="margin: 0;">
+                    <span data-i18n="file-input">文件输入</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <input type="radio" name="hash-input-type" value="hex" style="margin: 0;">
+                    <span data-i18n="hex-input">十六进制</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- 文本输入区域 -->
+        <div id="hash-text-area">
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;" data-i18n="input-text">输入文本</label>
+                <textarea id="hash-input-text" class="form-textarea" placeholder="请输入要计算哈希的文本..." style="height: 120px; resize: vertical;"></textarea>
+                <div style="margin-top: 0.5rem; font-size: 0.75rem; color: #6b7280;">
+                    <span id="hash-text-count">0</span> 字符 | <span id="hash-text-bytes">0</span> 字节
+                </div>
+            </div>
+        </div>
+
+        <!-- 文件输入区域 -->
+        <div id="hash-file-area" style="display: none;">
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;" data-i18n="select-file">选择文件</label>
+                <div style="border: 2px dashed #d1d5db; border-radius: 0.5rem; padding: 2rem; text-align: center; background-color: #f9fafb; transition: all 0.2s ease;" id="hash-file-drop-zone">
+                    <i class="fa fa-cloud-upload" style="font-size: 2rem; color: #9ca3af; margin-bottom: 0.5rem;"></i>
+                    <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 0.5rem;" data-i18n="drag-file-hint">拖拽文件到此处或点击选择</p>
+                    <input type="file" id="hash-file-input" style="display: none;">
+                    <button type="button" id="hash-file-select-btn" class="btn-outline" style="padding: 0.5rem 1rem;">
+                        <i class="fa fa-folder-open" style="margin-right: 0.375rem;"></i>
+                        <span data-i18n="select-file-btn">选择文件</span>
+                    </button>
+                </div>
+                <div id="hash-file-info" style="display: none; margin-top: 1rem; padding: 0.75rem; background-color: #f3f4f6; border-radius: 0.375rem; font-size: 0.875rem;">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <span id="hash-file-name" style="font-weight: 500;"></span>
+                        <span id="hash-file-size" style="color: #6b7280;"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 算法选择 -->
+        <div style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
+            <h3 style="font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.75rem;" data-i18n="hash-algorithms">哈希算法</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.5rem;">
+                <label style="display: flex; align-items: center; gap: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <input type="checkbox" class="hash-algorithm" value="md5" checked style="margin: 0;">
+                    <span>MD5</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <input type="checkbox" class="hash-algorithm" value="sha1" checked style="margin: 0;">
+                    <span>SHA-1</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <input type="checkbox" class="hash-algorithm" value="sha256" checked style="margin: 0;">
+                    <span>SHA-256</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <input type="checkbox" class="hash-algorithm" value="sha384" style="margin: 0;">
+                    <span>SHA-384</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <input type="checkbox" class="hash-algorithm" value="sha512" style="margin: 0;">
+                    <span>SHA-512</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <input type="checkbox" class="hash-algorithm" value="sha3-256" style="margin: 0;">
+                    <span>SHA3-256</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- HMAC选项 -->
+        <div id="hash-hmac-section" style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+                <h3 style="font-size: 0.875rem; font-weight: 600; color: #374151; margin: 0;" data-i18n="hmac-options">HMAC选项</h3>
+                <label style="display: flex; align-items: center; gap: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <input type="checkbox" id="hash-enable-hmac" style="margin: 0;">
+                    <span data-i18n="enable-hmac">启用HMAC</span>
+                </label>
+            </div>
+            <div id="hash-hmac-inputs" style="display: none; opacity: 0.5;">
+                <div style="margin-bottom: 0.75rem;">
+                    <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;" data-i18n="hmac-key">HMAC密钥</label>
+                    <input type="text" id="hash-hmac-key" class="form-input" placeholder="请输入HMAC密钥..." disabled>
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;" data-i18n="key-format">密钥格式</label>
+                    <select id="hash-hmac-format" class="form-input" disabled style="margin-bottom: 0;">
+                        <option value="text" data-i18n="text-format">文本</option>
+                        <option value="hex" data-i18n="hex-format">十六进制</option>
+                        <option value="base64" data-i18n="base64-format">Base64</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 输出选项 -->
+        <div style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
+            <h3 style="font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.75rem;" data-i18n="output-options">输出选项</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem;">
+                <label style="display: flex; align-items: center; gap: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <input type="radio" name="hash-output-format" value="hex" checked style="margin: 0;">
+                    <span data-i18n="hex-output">十六进制</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <input type="radio" name="hash-output-format" value="base64" style="margin: 0;">
+                    <span data-i18n="base64-output">Base64</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <input type="radio" name="hash-output-format" value="base64url" style="margin: 0;">
+                    <span data-i18n="base64-url-output">Base64 URL</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <input type="checkbox" id="hash-uppercase" style="margin: 0;">
+                    <span data-i18n="uppercase-output">大写输出</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- 计算按钮 -->
+        <div style="display: flex; gap: 0.75rem; margin-bottom: 1.5rem;">
+            <button id="hash-calculate" class="btn-primary">
+                <i class="fa fa-calculator" style="margin-right: 0.5rem;"></i>
+                <span data-i18n="calculate-hash">计算哈希</span>
+            </button>
+            <button id="hash-clear" class="btn-outline">
+                <i class="fa fa-trash" style="margin-right: 0.5rem;"></i>
+                <span data-i18n="clear">清空</span>
+            </button>
+        </div>
+
+        <!-- 计算结果 -->
+        <div id="hash-results" style="display: none;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                <h3 style="font-size: 1rem; font-weight: 600; color: #374151; margin: 0;" data-i18n="hash-results">计算结果</h3>
+                <div style="font-size: 0.875rem; color: #6b7280;">
+                    <i class="fa fa-clock-o" style="margin-right: 0.25rem;"></i>
+                    <span data-i18n="calculation-time">计算时间:</span>
+                    <span id="hash-calc-time" style="font-weight: 600;">0</span>ms
+                </div>
+            </div>
+
+            <!-- 哈希结果列表 -->
+            <div id="hash-result-list" style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1rem;">
+                <!-- 哈希结果将在这里动态生成 -->
+            </div>
+
+            <!-- 批量操作 -->
+            <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                <button id="hash-copy-all" class="btn-outline" style="font-size: 0.75rem; padding: 0.375rem 0.75rem;">
+                    <i class="fa fa-copy" style="margin-right: 0.375rem;"></i>
+                    <span data-i18n="copy-all">复制全部</span>
+                </button>
+                <button id="hash-compare" class="btn-outline" style="font-size: 0.75rem; padding: 0.375rem 0.75rem;">
+                    <i class="fa fa-columns" style="margin-right: 0.375rem;"></i>
+                    <span data-i18n="compare-hash">对比哈希</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 哈希对比器 -->
+        <div id="hash-compare-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 100; align-items: center; justify-content: center;">
+            <div style="background-color: white; border-radius: 0.75rem; padding: 1.5rem; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                    <h3 style="font-size: 1.125rem; font-weight: 600; color: #1f2937; margin: 0;" data-i18n="hash-comparison">哈希对比</h3>
+                    <button id="hash-close-compare" class="btn-outline" style="padding: 0.25rem 0.5rem;">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;" data-i18n="hash-to-compare">要对比的哈希值</label>
+                    <textarea id="hash-compare-input" class="form-textarea" placeholder="请输入要对比的哈希值..." style="height: 100px;"></textarea>
+                </div>
+                <div id="hash-compare-result" style="padding: 1rem; border-radius: 0.375rem; margin-bottom: 1rem;">
+                    <!-- 对比结果将在这里显示 -->
+                </div>
+                <button id="hash-do-compare" class="btn-primary" style="width: 100%;">
+                    <i class="fa fa-check" style="margin-right: 0.5rem;"></i>
+                    <span data-i18n="compare">对比</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

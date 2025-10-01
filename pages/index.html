@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevToolBox - 程序员实用工具集合</title>
+    
+    <!-- 引入外部资源 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 引入jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Tailwind配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981',
+                        dark: '#1E293B',
+                        light: '#F8FAFC',
+                        accent: '#8B5CF6',
+                        danger: '#EF4444',
+                        warning: '#F59E0B',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                },
+            }
+        }
+    </script>
+
+    <!-- 引入公共CSS -->
+    <link rel="stylesheet" href="assets/css/common.css">
+    
+    <!-- 引入JavaScript模块 -->
+    <script src="assets/js/i18n.js"></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/navigation.js"></script>
+    <script src="assets/js/tools.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/modules.js"></script>
+</head>
+
+<body style="font-family: Inter, system-ui, sans-serif; background-color: #f9fafb; color: #1f2937; margin: 0; padding: 0; height: 100vh; overflow: hidden;">
+    <!-- 全局组件 -->
+    <div id="global-components"></div>
+    
+    <!-- 主容器 -->
+    <div style="display: flex; width: 100%; height: 100vh;">
+        <!-- 侧边栏组件 -->
+        <div id="sidebar-container"></div>
+        
+        <!-- 主内容区域 -->
+        <main style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
+            <!-- 头部组件 -->
+            <div id="header-container"></div>
+            
+            <!-- 工具内容区域 -->
+            <div style="flex: 1; overflow-y: auto; padding: 1rem; scrollbar-width: thin; background-color: #f9fafb;">
+                <div id="tool-content" style="flex-direction: column; gap: 1.5rem; width: 100%;">
+                    <!-- JSON工具组件 -->
+                    <div id="json-tool-container"></div>
+
+                    <!-- XML工具组件 -->
+                    <div id="xml-tool-container"></div>
+
+                    <!-- 时间戳工具组件 -->
+                    <div id="timestamp-tool-container"></div>
+
+                    <!-- Base64编码工具组件 -->
+                    <div id="base64-tool-container"></div>
+
+                    <!-- URL编码工具组件 -->
+                    <div id="url-tool-container"></div>
+
+                    <!-- 正则表达式测试工具组件 -->
+                    <div id="regex-tool-container"></div>
+
+                    <!-- UUID生成器组件 -->
+                    <div id="uuid-tool-container"></div>
+
+                    <!-- 哈希计算工具组件 -->
+                    <div id="hash-tool-container"></div>
+
+                    <!-- 文本加密工具组件 -->
+                    <div id="encrypt-tool-container"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 动态加载组件的脚本 -->
+    <script>
+        // 动态加载HTML组件
+        $(document).ready(function() {
+            // 加载全局组件
+            $.get('assets/components/global.html', function(data) {
+                $('#global-components').html(data);
+            });
+            
+            // 加载侧边栏
+            $.get('assets/components/sidebar.html', function(data) {
+                $('#sidebar-container').html(data);
+            });
+            
+            // 加载头部
+            $.get('assets/components/header.html', function(data) {
+                $('#header-container').html(data);
+            });
+            
+            // 加载工具组件
+            $.get('assets/components/json-tool.html', function(data) {
+                $('#json-tool-container').html(data);
+            });
+            
+            $.get('assets/components/xml-tool.html', function(data) {
+                $('#xml-tool-container').html(data);
+            });
+            
+            $.get('assets/components/timestamp-tool.html', function(data) {
+                $('#timestamp-tool-container').html(data);
+            });
+
+            // 加载Base64编码工具
+            $.get('assets/components/base64-tool.html', function(data) {
+                $('#base64-tool-container').html(data);
+            });
+
+            // 加载URL编码工具
+            $.get('assets/components/url-tool.html', function(data) {
+                $('#url-tool-container').html(data);
+            });
+
+            // 加载正则表达式测试工具
+            $.get('assets/components/regex-tool.html', function(data) {
+                $('#regex-tool-container').html(data);
+            });
+
+            // 加载UUID生成器
+            $.get('assets/components/uuid-tool.html', function(data) {
+                $('#uuid-tool-container').html(data);
+            });
+
+            // 加载哈希计算工具
+            $.get('assets/components/hash-tool.html', function(data) {
+                $('#hash-tool-container').html(data);
+            });
+
+            // 加载文本加密工具
+            $.get('assets/components/encrypt-tool.html', function(data) {
+                $('#encrypt-tool-container').html(data);
+            });
+        });
+    </script>
+</body>
+</html>

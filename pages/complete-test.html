@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>完整功能测试</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/common.css">
+    <style>
+        /* 自定义颜色变量 */
+        :root {
+            --primary: #3B82F6;
+            --secondary: #10B981;
+            --dark: #1E293B;
+            --light: #F8FAFC;
+            --accent: #8B5CF6;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+        }
+
+        body {
+            font-family: Inter, system-ui, sans-serif;
+            background-color: #f9fafb;
+            color: #1f2937;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 主容器 */
+        .main-container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+        }
+
+        /* 测试信息面板 */
+        .test-panel {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 1000;
+            max-width: 350px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .test-panel h3 {
+            margin: 0 0 10px 0;
+            color: #3B82F6;
+        }
+
+        .test-item {
+            margin-bottom: 5px;
+            padding: 2px 0;
+        }
+
+        .test-item.success {
+            color: #10B981;
+        }
+
+        .test-item.error {
+            color: #EF4444;
+        }
+
+        .test-item.warning {
+            color: #F59E0B;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-panel">
+        <h3>🔧 系统诊断</h3>
+        <div id="test-results">
+            <div class="test-item">等待初始化...</div>
+        </div>
+    </div>
+
+    <!-- 主容器 -->
+    <div class="main-container">
+        <!-- 侧边栏 -->
+        <aside id="sidebar" class="sidebar">
+            <div style="padding: 1.25rem; border-bottom: 1px solid #e5e7eb;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <div style="background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; padding: 0.5rem; border-radius: 0.5rem;">
+                        <i class="fa fa-wrench" style="font-size: 1.25rem;"></i>
+                    </div>
+                    <h1 style="font-size: 1.25rem; font-weight: 700; color: var(--dark);">DevToolBox</h1>
+                </div>
+            </div>
+
+            <nav style="padding: 1rem;">
+                <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                    <!-- 数据格式化 -->
+                    <div style="margin-bottom: 0.5rem;">
+                        <p style="font-size: 0.75rem; text-transform: uppercase; color: #6b7280; font-weight: 600; letter-spacing: 0.05em; margin-bottom: 0.5rem; padding-left: 0.75rem;">数据格式化</p>
+                        <a href="#json-formatter" class="nav-item active" data-category="json">
+                            <i class="fa fa-code" style="margin-right: 0.75rem; width: 1.25rem; text-align: center;"></i>
+                            <span>JSON格式化</span>
+                        </a>
+                        <a href="#xml-formatter" class="nav-item" data-category="xml">
+                            <i class="fa fa-file-code-o" style="margin-right: 0.75rem; width: 1.25rem; text-align: center;"></i>
+                            <span>XML格式化</span>
+                        </a>
+                    </div>
+
+                    <!-- 时间日期 -->
+                    <div style="margin-bottom: 0.5rem;">
+                        <p style="font-size: 0.75rem; text-transform: uppercase; color: #6b7280; font-weight: 600; letter-spacing: 0.05em; margin-bottom: 0.5rem; padding-left: 0.75rem;">时间日期</p>
+                        <a href="#timestamp-converter" class="nav-item" data-category="timestamp">
+                            <i class="fa fa-clock-o" style="margin-right: 0.75rem; width: 1.25rem; text-align: center;"></i>
+                            <span>时间戳转换</span>
+                        </a>
+                    </div>
+
+                    <!-- 编码转换 -->
+                    <div style="margin-bottom: 0.5rem;">
+                        <p style="font-size: 0.75rem; text-transform: uppercase; color: #6b7280; font-weight: 600; letter-spacing: 0.05em; margin-bottom: 0.5rem; padding-left: 0.75rem;">编码转换</p>
+                        <a href="#base64-encoder" class="nav-item" data-category="base64">
+                            <i class="fa fa-exchange" style="margin-right: 0.75rem; width: 1.25rem; text-align: center;"></i>
+                            <span>Base64编码</span>
+                        </a>
+                        <a href="#url-encoder" class="nav-item" data-category="url">
+                            <i class="fa fa-link" style="margin-right: 0.75rem; width: 1.25rem; text-align: center;"></i>
+                            <span>URL编码</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- 主内容区域 -->
+        <main class="main-content">
+            <!-- 头部 -->
+            <header class="header">
+                <div class="header-content">
+                    <div style="display: flex; align-items: center;">
+                        <button id="toggle-sidebar" style="display: none; margin-right: 1rem; color: #4b5563; cursor: pointer;" class="mobile-only">
+                            <i class="fa fa-bars" style="font-size: 1.25rem;"></i>
+                        </button>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;" class="mobile-only">
+                            <div style="background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; padding: 0.25rem; border-radius: 0.25rem;">
+                                <i class="fa fa-wrench"></i>
+                            </div>
+                            <h1 style="font-size: 1.125rem; font-weight: 700; color: var(--dark);">DevToolBox</h1>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 0.25rem;" class="desktop-only">
+                            <span style="font-size: 0.875rem; color: #6b7280;">当前工具:</span>
+                            <span id="current-tool-name" style="font-size: 0.875rem; font-weight: 500;">JSON格式化</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- 内容区域 -->
+            <div class="content-area">
+                <div style="max-width: 1200px; margin: 0 auto;">
+                    <!-- JSON工具 -->
+                    <div id="json" class="tool-section" style="display: block;">
+                        <div class="tool-header">
+                            <h2 style="font-size: 1.25rem; font-weight: 700; display: flex; align-items: center;">
+                                <i class="fa fa-code" style="color: var(--primary); margin-right: 0.5rem;"></i>
+                                <span>JSON格式化工具</span>
+                            </h2>
+                            <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.25rem;">格式化、校验和转换JSON数据</p>
+                        </div>
+                        <div class="tool-content">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                                <div>
+                                    <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;">输入JSON</label>
+                                    <textarea id="json-input" class="form-textarea" placeholder="请输入JSON数据...">{"name":"DevTools","type":"utility","features":["json","base64","timestamp"]}</textarea>
+                                </div>
+                                <div>
+                                    <label style="display: flex; align-items: center; justify-content: space-between; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;">
+                                        <span>格式化结果</span>
+                                        <button id="json-copy" class="btn-outline">
+                                            <i class="fa fa-copy"></i> 复制
+                                        </button>
+                                    </label>
+                                    <div id="json-output" style="width: 100%; height: 200px; padding: 1rem; border: 1px solid #d1d5db; border-radius: 0.5rem; background-color: #f9fafb; font-family: monospace; font-size: 0.875rem; overflow-y: auto;"></div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 1rem; display: flex; gap: 0.75rem;">
+                                <button id="json-format" class="btn-primary">
+                                    <i class="fa fa-magic"></i> 格式化
+                                </button>
+                                <button id="json-minify" class="btn-secondary">
+                                    <i class="fa fa-compress"></i> 压缩
+                                </button>
+                                <button id="json-validate" class="btn-outline">
+                                    <i class="fa fa-check"></i> 校验
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- XML工具 -->
+                    <div id="xml" class="tool-section" style="display: none;">
+                        <div class="tool-header">
+                            <h2 style="font-size: 1.25rem; font-weight: 700; display: flex; align-items: center;">
+                                <i class="fa fa-file-code-o" style="color: var(--primary); margin-right: 0.5rem;"></i>
+                                <span>XML格式化工具</span>
+                            </h2>
+                            <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.25rem;">格式化和校验XML数据</p>
+                        </div>
+                        <div class="tool-content">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                                <div>
+                                    <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;">输入XML</label>
+                                    <textarea id="xml-input" class="form-textarea" placeholder="请输入XML数据..."><root><item id="1"><name>测试</name><value>示例</value></item></root></textarea>
+                                </div>
+                                <div>
+                                    <label style="display: flex; align-items: center; justify-content: space-between; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;">
+                                        <span>格式化结果</span>
+                                        <button id="xml-copy" class="btn-outline">
+                                            <i class="fa fa-copy"></i> 复制
+                                        </button>
+                                    </label>
+                                    <div id="xml-output" style="width: 100%; height: 200px; padding: 1rem; border: 1px solid #d1d5db; border-radius: 0.5rem; background-color: #f9fafb; font-family: monospace; font-size: 0.875rem; overflow-y: auto;"></div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 1rem; display: flex; gap: 0.75rem;">
+                                <button id="xml-format" class="btn-primary">
+                                    <i class="fa fa-magic"></i> 格式化
+                                </button>
+                                <button id="xml-minify" class="btn-secondary">
+                                    <i class="fa fa-compress"></i> 压缩
+                                </button>
+                                <button id="xml-validate" class="btn-outline">
+                                    <i class="fa fa-check"></i> 校验
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 时间戳工具 -->
+                    <div id="timestamp" class="tool-section" style="display: none;">
+                        <div class="tool-header">
+                            <h2 style="font-size: 1.25rem; font-weight: 700; display: flex; align-items: center;">
+                                <i class="fa fa-clock-o" style="color: var(--primary); margin-right: 0.5rem;"></i>
+                                <span>时间戳转换工具</span>
+                            </h2>
+                            <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.25rem;">时间戳与日期时间相互转换</p>
+                        </div>
+                        <div class="tool-content">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                                <div>
+                                    <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;">时间戳</label>
+                                    <input type="number" id="timestamp-input" class="form-input" placeholder="输入时间戳...">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;">日期时间</label>
+                                    <input type="datetime-local" id="datetime-input" class="form-input">
+                                </div>
+                            </div>
+                            <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                                <button id="timestamp-to-datetime" class="btn-primary">
+                                    <i class="fa fa-arrow-right"></i> 转换为日期
+                                </button>
+                                <button id="datetime-to-timestamp" class="btn-primary">
+                                    <i class="fa fa-arrow-left"></i> 转换为时间戳
+                                </button>
+                                <button id="current-timestamp" class="btn-secondary">
+                                    <i class="fa fa-clock"></i> 当前时间戳
+                                </button>
+                            </div>
+                            <div style="margin-top: 1.5rem; padding: 1rem; background-color: #f9fafb; border-radius: 0.5rem;">
+                                <h3 style="font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.75rem;">常用时间戳</h3>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem;">
+                                    <button class="quick-timestamp-btn" data-timestamp="">当前时间</button>
+                                    <button class="quick-timestamp-btn" data-timestamp="0">1970-01-01</button>
+                                    <button class="quick-timestamp-btn" data-timestamp="86400">1970-01-02</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Base64工具 -->
+                    <div id="base64" class="tool-section" style="display: none;">
+                        <div class="tool-header">
+                            <h2 style="font-size: 1.25rem; font-weight: 700; display: flex; align-items: center;">
+                                <i class="fa fa-exchange" style="color: var(--primary); margin-right: 0.5rem;"></i>
+                                <span>Base64编码工具</span>
+                            </h2>
+                            <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.25rem;">Base64编码/解码，支持文本和文件</p>
+                        </div>
+                        <div class="tool-content">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                                <div>
+                                    <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;">输入文本</label>
+                                    <textarea id="base64-input" class="form-textarea" placeholder="请输入要编码的文本...">Hello World!</textarea>
+                                    <div style="margin-top: 0.5rem; font-size: 0.75rem; color: #6b7280;">
+                                        <span class="char-count">0</span> 字符 | <span class="text-bytes">0</span> 字节
+                                    </div>
+                                </div>
+                                <div>
+                                    <label style="display: flex; align-items: center; justify-content: space-between; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;">
+                                        <span>输出结果</span>
+                                        <button id="base64-copy" class="btn-outline">
+                                            <i class="fa fa-copy"></i> 复制
+                                        </button>
+                                    </label>
+                                    <textarea id="base64-output" class="form-textarea" readonly style="background-color: #f9fafb;"></textarea>
+                                    <div style="margin-top: 0.5rem; font-size: 0.75rem; color: #6b7280;">
+                                        <span class="output-count">0</span> 字符
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 1rem; display: flex; gap: 0.75rem;">
+                                <button id="base64-convert" class="btn-primary">
+                                    <i class="fa fa-exchange"></i> 编码
+                                </button>
+                                <button id="base64-example" class="btn-secondary">
+                                    <i class="fa fa-file-text"></i> 加载示例
+                                </button>
+                                <button id="base64-clear" class="btn-outline">
+                                    <i class="fa fa-trash"></i> 清空
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- URL工具 -->
+                    <div id="url" class="tool-section" style="display: none;">
+                        <div class="tool-header">
+                            <h2 style="font-size: 1.25rem; font-weight: 700; display: flex; align-items: center;">
+                                <i class="fa fa-link" style="color: var(--primary); margin-right: 0.5rem;"></i>
+                                <span>URL编码工具</span>
+                            </h2>
+                            <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.25rem;">URL编码/解码，支持参数解析</p>
+                        </div>
+                        <div class="tool-content">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                                <div>
+                                    <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;">输入URL</label>
+                                    <textarea id="url-input" class="form-textarea" placeholder="请输入URL...">https://example.com/search?q=测试</textarea>
+                                </div>
+                                <div>
+                                    <label style="display: flex; align-items: center; justify-content: space-between; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;">
+                                        <span>编码结果</span>
+                                        <button id="url-copy" class="btn-outline">
+                                            <i class="fa fa-copy"></i> 复制
+                                        </button>
+                                    </label>
+                                    <textarea id="url-output" class="form-textarea" readonly style="background-color: #f9fafb;"></textarea>
+                                </div>
+                            </div>
+                            <div style="margin-top: 1rem; display: flex; gap: 0.75rem;">
+                                <button id="url-encode" class="btn-primary">
+                                    <i class="fa fa-lock"></i> 编码
+                                </button>
+                                <button id="url-decode" class="btn-secondary">
+                                    <i class="fa fa-unlock"></i> 解码
+                                </button>
+                                <button id="url-example" class="btn-outline">
+                                    <i class="fa fa-file-text"></i> 加载示例
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 测试控制面板 -->
+                    <div style="background: white; padding: 1.5rem; border-radius: 0.75rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); margin-top: 2rem;">
+                        <h3 style="margin-bottom: 1rem; color: var(--primary);">🧪 测试控制</h3>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            <button onclick="testAllTools()" class="btn-primary">
+                                <i class="fa fa-play"></i> 测试所有工具
+                            </button>
+                            <button onclick="testNavigation()" class="btn-secondary">
+                                <i class="fa fa-random"></i> 测试导航切换
+                            </button>
+                            <button onclick="testSidebar()" class="btn-outline">
+                                <i class="fa fa-bars"></i> 测试侧边栏
+                            </button>
+                            <button onclick="clearResults()" class="btn-outline">
+                                <i class="fa fa-trash"></i> 清空结果
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // 测试结果管理
+        let testResults = [];
+
+        function addTestResult(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const result = { message, type, timestamp };
+            testResults.push(result);
+            updateTestDisplay();
+        }
+
+        function updateTestDisplay() {
+            const container = $('#test-results');
+            container.empty();
+
+            testResults.slice(-10).forEach(result => {
+                const div = $(`<div class="test-item ${result.type}">[${result.timestamp}] ${result.message}</div>`);
+                container.append(div);
+            });
+        }
+
+        // 测试所有工具
+        function testAllTools() {
+            addTestResult('开始测试所有工具...', 'info');
+
+            // 测试工具显示/隐藏
+            const tools = ['json', 'xml', 'timestamp', 'base64', 'url'];
+            tools.forEach(tool => {
+                $(`.nav-item[data-category="${tool}"]`).click();
+                const isVisible = $(`#${tool}`).css('display') === 'block';
+                addTestResult(`${tool} 工具显示: ${isVisible ? '✓' : '✗'}`, isVisible ? 'success' : 'error');
+            });
+
+            // 回到JSON工具
+            $('.nav-item[data-category="json"]').click();
+            addTestResult('工具测试完成', 'success');
+        }
+
+        // 测试导航切换
+        function testNavigation() {
+            addTestResult('开始测试导航切换...', 'info');
+
+            const items = $('.nav-item');
+            items.each((index, item) => {
+                $(item).click();
+                const toolName = $(item).find('span').text();
+                const currentToolName = $('#current-tool-name').text();
+                const isActive = $(item).hasClass('active');
+
+                addTestResult(`切换到 ${toolName}: ${isActive ? '✓' : '✗'} | 头部显示: ${currentToolName}`, isActive ? 'success' : 'error');
+            });
+
+            addTestResult('导航测试完成', 'success');
+        }
+
+        // 测试侧边栏
+        function testSidebar() {
+            addTestResult('开始测试侧边栏...', 'info');
+
+            const sidebar = $('#sidebar');
+            const isOpen = sidebar.hasClass('open');
+
+            $('#toggle-sidebar').click();
+            setTimeout(() => {
+                const newIsOpen = sidebar.hasClass('open');
+                addTestResult(`侧边栏切换: ${isOpen} → ${newIsOpen}`, newIsOpen !== isOpen ? 'success' : 'error');
+
+                $('#toggle-sidebar').click();
+                setTimeout(() => {
+                    const finalIsOpen = sidebar.hasClass('open');
+                    addTestResult(`侧边栏还原: ${newIsOpen} → ${finalIsOpen}`, finalIsOpen === false ? 'success' : 'error');
+                    addTestResult('侧边栏测试完成', 'success');
+                }, 300);
+            }, 300);
+        }
+
+        // 清空结果
+        function clearResults() {
+            testResults = [];
+            addTestResult('测试结果已清空', 'info');
+        }
+
+        // 简单的工具功能模拟
+        function initToolFunctions() {
+            // JSON工具
+            $('#json-format').click(() => {
+                try {
+                    const input = $('#json-input').val();
+                    const parsed = JSON.parse(input);
+                    const formatted = JSON.stringify(parsed, null, 2);
+                    $('#json-output').html('<pre>' + formatted + '</pre>');
+                    addTestResult('JSON格式化成功', 'success');
+                } catch (e) {
+                    $('#json-output').html('<div style="color: red;">JSON格式错误: ' + e.message + '</div>');
+                    addTestResult('JSON格式化失败', 'error');
+                }
+            });
+
+            // Base64工具
+            $('#base64-convert').click(() => {
+                const input = $('#base64-input').val();
+                const encoded = btoa(unescape(encodeURIComponent(input)));
+                $('#base64-output').val(encoded);
+                addTestResult('Base64编码成功', 'success');
+            });
+
+            // URL工具
+            $('#url-encode').click(() => {
+                const input = $('#url-input').val();
+                const encoded = encodeURIComponent(input);
+                $('#url-output').val(encoded);
+                addTestResult('URL编码成功', 'success');
+            });
+
+            // 示例按钮
+            $('#base64-example').click(() => {
+                $('#base64-input').val('Hello, World! 你好世界！');
+                addTestResult('Base64示例加载成功', 'success');
+            });
+
+            $('#url-example').click(() => {
+                $('#url-input').val('https://example.com/search?q=测试&category=tech');
+                addTestResult('URL示例加载成功', 'success');
+            });
+
+            // 复制功能
+            $('.btn-outline').each((i, btn) => {
+                if ($(btn).text().includes('复制')) {
+                    $(btn).click(() => {
+                        const targetId = $(btn).attr('id').replace('-copy', '-output');
+                        const text = $(`#${targetId}`).val() || $(`#${targetId}`).text();
+                        navigator.clipboard.writeText(text).then(() => {
+                            addTestResult('复制成功', 'success');
+                        });
+                    });
+                }
+            });
+        }
+
+        // 初始化
+        $(document).ready(function() {
+            addTestResult('页面初始化开始...', 'info');
+
+            // 检查依赖
+            if (typeof $ !== 'undefined') {
+                addTestResult('jQuery 加载成功', 'success');
+            } else {
+                addTestResult('jQuery 加载失败', 'error');
+            }
+
+            // 导航点击事件
+            $('.nav-item').click(function(e) {
+                e.preventDefault();
+
+                // 移除所有导航项的活跃状态
+                $('.nav-item').removeClass('active nav-item-active');
+
+                // 添加当前导航项的活跃状态
+                $(this).addClass('active nav-item-active');
+
+                // 获取工具类别
+                const category = $(this).attr('data-category');
+                const toolTitle = $(this).find('span').text();
+
+                // 更新当前工具名称
+                $('#current-tool-name').text(toolTitle);
+
+                // 隐藏所有工具，显示当前工具
+                $('.tool-section').css('display', 'none');
+                $(`#${category}`).css('display', 'block');
+
+                addTestResult(`切换到工具: ${toolTitle}`, 'success');
+
+                // 在移动设备上点击导航后关闭侧边栏
+                if ($(window).width() < 768) {
+                    $('#sidebar').removeClass('open');
+                }
+            });
+
+            // 侧边栏切换
+            $('#toggle-sidebar').click(function() {
+                $('#sidebar').toggleClass('open');
+                addTestResult(`侧边栏切换: ${$('#sidebar').hasClass('open') ? '打开' : '关闭'}`, 'info');
+            });
+
+            // 响应式处理
+            $(window).resize(function() {
+                const width = $(window).width();
+                if (width > 767) {
+                    $('#sidebar').removeClass('open');
+                }
+            });
+
+            // 初始化工具功能
+            initToolFunctions();
+
+            addTestResult('页面初始化完成', 'success');
+            addTestResult('默认显示JSON工具', 'success');
+
+            // 自动测试
+            setTimeout(() => {
+                addTestResult('开始自动测试...', 'info');
+                testNavigation();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

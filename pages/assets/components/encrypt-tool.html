@@ -1,0 +1,208 @@
+<!-- 文本加密工具 -->
+<div id="encrypt" class="tool-section" style="display: none;">
+    <div class="tool-header">
+        <h2 style="font-size: 1.25rem; font-weight: 700; display: flex; align-items: center;">
+            <i class="fa fa-lock" style="color: var(--primary); margin-right: 0.5rem;"></i>
+            <span data-i18n="text-encrypt">文本加密</span>
+        </h2>
+        <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.25rem;" data-i18n="encrypt-desc">支持AES、DES加密解密，Base64编码输出</p>
+    </div>
+
+    <div class="tool-content">
+        <!-- 模式选择 -->
+        <div style="margin-bottom: 1.5rem;">
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                <button class="encrypt-mode-btn active" data-mode="encrypt" style="padding: 0.5rem 1rem; background-color: var(--primary); color: white; border: none; border-radius: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <i class="fa fa-lock" style="margin-right: 0.375rem;"></i>
+                    <span data-i18n="encrypt">加密</span>
+                </button>
+                <button class="encrypt-mode-btn" data-mode="decrypt" style="padding: 0.5rem 1rem; background-color: #f3f4f6; color: #374151; border: none; border-radius: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <i class="fa fa-unlock" style="margin-right: 0.375rem;"></i>
+                    <span data-i18n="decrypt">解密</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 加密算法选择 -->
+        <div style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
+            <h3 style="font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.75rem;" data-i18n="encryption-algorithm">加密算法</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                <!-- 算法选择 -->
+                <div>
+                    <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;" data-i18n="algorithm">算法</label>
+                    <select id="encrypt-algorithm" class="form-input">
+                        <option value="aes" selected>AES</option>
+                        <option value="des">DES</option>
+                        <option value="tripledes">Triple DES</option>
+                        <option value="rabbit">Rabbit</option>
+                        <option value="rc4">RC4</option>
+                    </select>
+                </div>
+
+                <!-- 密钥长度 -->
+                <div>
+                    <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;" data-i18n="key-size">密钥长度</label>
+                    <select id="encrypt-key-size" class="form-input">
+                        <option value="128" selected>128位</option>
+                        <option value="192">192位</option>
+                        <option value="256">256位</option>
+                    </select>
+                </div>
+
+                <!-- 模式 -->
+                <div>
+                    <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;" data-i18n="mode">模式</label>
+                    <select id="encrypt-mode" class="form-input">
+                        <option value="cbc" selected>CBC</option>
+                        <option value="ecb">ECB</option>
+                        <option value="cfb">CFB</option>
+                        <option value="ofb">OFB</option>
+                        <option value="ctr">CTR</option>
+                    </select>
+                </div>
+
+                <!-- 填充方式 -->
+                <div>
+                    <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;" data-i18n="padding">填充方式</label>
+                    <select id="encrypt-padding" class="form-input">
+                        <option value="pkcs7" selected>PKCS7</option>
+                        <option value="iso97971">ISO 97971</option>
+                        <option value="ansix923">ANSI X.923</option>
+                        <option value="iso10126">ISO 10126</option>
+                        <option value="zeropadding">Zero Padding</option>
+                        <option value="nopadding">No Padding</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 密钥设置 -->
+        <div style="background-color: #fef3c7; border: 1px solid #fcd34d; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
+            <h3 style="font-size: 0.875rem; font-weight: 600; color: #92400e; margin-bottom: 0.75rem;" data-i18n="key-settings">密钥设置</h3>
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #92400e; margin-bottom: 0.5rem;" data-i18n="encryption-key">加密密钥</label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="password" id="encrypt-key" class="form-input" placeholder="请输入加密密钥..." style="flex: 1;">
+                    <button id="encrypt-toggle-key" class="btn-outline" style="padding: 0.5rem;">
+                        <i class="fa fa-eye"></i>
+                    </button>
+                    <button id="encrypt-generate-key" class="btn-secondary" style="padding: 0.5rem;">
+                        <i class="fa fa-key"></i>
+                    </button>
+                </div>
+                <div style="margin-top: 0.5rem; font-size: 0.75rem; color: #92400e;">
+                    <span id="encrypt-key-strength" data-i18n="key-strength">密钥强度:</span>
+                    <span id="encrypt-key-strength-text" style="font-weight: 600;">--</span>
+                </div>
+            </div>
+
+            <!-- 向量IV (仅某些模式需要) -->
+            <div id="encrypt-iv-section">
+                <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #92400e; margin-bottom: 0.5rem;" data-i18n="initialization-vector">初始化向量 (IV)</label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" id="encrypt-iv" class="form-input" placeholder="留空自动生成..." style="flex: 1;">
+                    <button id="encrypt-generate-iv" class="btn-outline" style="padding: 0.5rem;">
+                        <i class="fa fa-random"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 输入输出区域 -->
+        <div class="responsive-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+            <!-- 输入 -->
+            <div>
+                <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;">
+                    <span class="encrypt-input-label" data-i18n="input-text">输入文本</span>
+                </label>
+                <textarea id="encrypt-input" class="form-textarea" placeholder="请输入要加密的文本..." style="height: 200px; resize: vertical;"></textarea>
+                <div style="margin-top: 0.5rem; font-size: 0.75rem; color: #6b7280;">
+                    <span class="encrypt-char-count">0</span> 字符 | <span class="encrypt-byte-count">0</span> 字节
+                </div>
+            </div>
+
+            <!-- 输出 -->
+            <div>
+                <label style="display: flex; align-items: center; justify-content: space-between; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;">
+                    <span class="encrypt-output-label" data-i18n="output-text">输出结果</span>
+                    <div style="display: flex; gap: 0.25rem;">
+                        <button id="encrypt-copy-output" class="btn-outline" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                            <i class="fa fa-copy" style="margin-right: 0.25rem;"></i>
+                            <span data-i18n="copy">复制</span>
+                        </button>
+                        <select id="encrypt-output-format" class="form-input" style="font-size: 0.75rem; padding: 0.25rem 0.5rem; width: auto;">
+                            <option value="base64">Base64</option>
+                            <option value="hex">Hex</option>
+                            <option value="string">String</option>
+                        </select>
+                    </div>
+                </label>
+                <textarea id="encrypt-output" class="form-textarea" readonly style="height: 200px; resize: vertical; background-color: #f9fafb;"></textarea>
+                <div style="margin-top: 0.5rem; font-size: 0.75rem; color: #6b7280;">
+                    <span class="encrypt-output-count">0</span> 字符
+                </div>
+            </div>
+        </div>
+
+        <!-- 输出编码选项 -->
+        <div style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
+            <h3 style="font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.75rem;" data-i18n="output-encoding">输出编码</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+                <label style="display: flex; align-items: center; gap: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <input type="radio" name="encrypt-output-encoding" value="base64" checked style="margin: 0;">
+                    <span data-i18n="base64-encoding">Base64编码</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <input type="radio" name="encrypt-output-encoding" value="hex" style="margin: 0;">
+                    <span data-i18n="hex-encoding">十六进制编码</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <input type="radio" name="encrypt-output-encoding" value="string" style="margin: 0;">
+                    <span data-i18n="string-output">字符串输出</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- 快速操作 -->
+        <div style="background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
+            <h3 style="font-size: 0.875rem; font-weight: 600; color: #1e40af; margin-bottom: 0.75rem;" data-i18n="quick-actions">快速操作</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                <button id="encrypt-load-example" class="btn-outline" style="font-size: 0.75rem; padding: 0.375rem 0.75rem;">
+                    <i class="fa fa-file-text-o" style="margin-right: 0.375rem;"></i>
+                    <span data-i18n="load-example">加载示例</span>
+                </button>
+                <button id="encrypt-swap-io" class="btn-outline" style="font-size: 0.75rem; padding: 0.375rem 0.75rem;">
+                    <i class="fa fa-exchange" style="margin-right: 0.375rem;"></i>
+                    <span data-i18n="swap-input-output">交换输入输出</span>
+                </button>
+                <button id="encrypt-clear-all" class="btn-outline" style="font-size: 0.75rem; padding: 0.375rem 0.75rem;">
+                    <i class="fa fa-trash" style="margin-right: 0.375rem;"></i>
+                    <span data-i18n="clear-all">清空全部</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div style="display: flex; gap: 0.75rem;">
+            <button id="encrypt-process" class="btn-primary">
+                <i class="fa fa-lock" style="margin-right: 0.5rem;"></i>
+                <span class="encrypt-process-text" data-i18n="encrypt">加密</span>
+            </button>
+            <button id="encrypt-clear" class="btn-outline">
+                <i class="fa fa-trash" style="margin-right: 0.5rem;"></i>
+                <span data-i18n="clear">清空</span>
+            </button>
+        </div>
+
+        <!-- 加密信息 -->
+        <div id="encrypt-info" style="display: none; margin-top: 1.5rem; padding: 1rem; background-color: #f0f9ff; border: 1px solid #0ea5e9; border-radius: 0.5rem;">
+            <h4 style="font-size: 0.875rem; font-weight: 600; color: #0c4a6e; margin-bottom: 0.5rem;" data-i18n="encryption-info">加密信息</h4>
+            <div style="font-size: 0.875rem; color: #0c4a6e; line-height: 1.5;">
+                <div><strong data-i18n="algorithm-used">使用算法:</strong> <span id="encrypt-info-algorithm">--</span></div>
+                <div><strong data-i18n="key-size-used">密钥长度:</strong> <span id="encrypt-info-key-size">--</span></div>
+                <div><strong data-i18n="mode-used">加密模式:</strong> <span id="encrypt-info-mode">--</span></div>
+                <div><strong data-i18n="processing-time">处理时间:</strong> <span id="encrypt-info-time">--</span>ms</div>
+            </div>
+        </div>
+    </div>
+</div>

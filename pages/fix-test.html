@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevToolBox 错误修复测试</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/i18n.js"></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/tools.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; marclaude
+        gin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .error { color: red; }
+        .success { color: green; }
+        textarea { width: 100%; height: 100px; margin: 10px 0; }
+        button { margin: 5px; padding: 8px 15px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>DevToolBox 错误修复测试</h1>
+
+    <div class="test-section">
+        <h2>Base64工具测试</h2>
+        <textarea id="base64-test-input" placeholder="输入要测试的文本...">Hello World! 你好世界！</textarea>
+        <br>
+        <button onclick="testBase64Encode()">测试编码</button>
+        <button onclick="testBase64Decode()">测试解码</button>
+        <div id="base64-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>URL工具测试</h2>
+        <textarea id="url-test-input" placeholder="输入要测试的URL...">https://example.com/search?q=测试&category=tech</textarea>
+        <br>
+        <button onclick="testUrlEncode()">测试编码</button>
+        <button onclick="testUrlDecode()">测试解码</button>
+        <div id="url-result"></div>
+    </div>
+
+    <script>
+        // 模拟语言管理器
+        window.LanguageManager = {
+            getText: function(key) {
+                const translations = {
+                    'operation-success': '操作成功',
+                    'please-enter-content': '请输入内容',
+                    'please-select-file': '请选择文件',
+                    'no-content-to-copy': '没有可复制的内容',
+                    'copy-success': '复制成功',
+                    'copy-failed': '复制失败，请手动复制',
+                    'content-cleared': '内容已清空'
+                };
+                return translations[key] || key;
+            }
+        };
+
+        // 模拟通知功能
+        window.testNotifications = [];
+        window.Utils = window.Utils || {};
+        window.Utils.showNotification = function(message, isError = false) {
+            testNotifications.push({ message, isError });
+            console.log('通知:', message, isError ? '(错误)' : '(成功)');
+        };
+
+        // 初始化工具
+        $(document).ready(function() {
+            try {
+                Base64Tool.init(Utils);
+                document.getElementById('base64-result').innerHTML = '<div class="success">✓ Base64工具初始化成功</div>';
+            } catch (e) {
+                document.getElementById('base64-result').innerHTML = '<div class="error">✗ Base64工具初始化失败: ' + e.message + '</div>';
+            }
+
+            try {
+                UrlTool.init(Utils);
+                document.getElementById('url-result').innerHTML = '<div class="success">✓ URL工具初始化成功</div>';
+            } catch (e) {
+                document.getElementById('url-result').innerHTML = '<div class="error">✗ URL工具初始化失败: ' + e.message + '</div>';
+            }
+        });
+
+        function testBase64Encode() {
+            try {
+                const input = $('#base64-test-input').val();
+                Base64Tool.encodeText(input, Utils);
+                const result = $('#base64-output-text').val();
+                document.getElementById('base64-result').innerHTML =
+                    '<div class="success">✓ Base64编码成功</div>' +
+                    '<div>结果: <code>' + result + '</code></div>';
+            } catch (e) {
+                document.getElementById('base64-result').innerHTML =
+                    '<div class="error">✗ Base64编码失败: ' + e.message + '</div>';
+            }
+        }
+
+        function testBase64Decode() {
+            try {
+                const input = $('#base64-test-input').val();
+                Base64Tool.decodeText(input, Utils);
+                const result = $('#base64-output-text').val();
+                document.getElementById('base64-result').innerHTML =
+                    '<div class="success">✓ Base64解码成功</div>' +
+                    '<div>结果: <code>' + result + '</code></div>';
+            } catch (e) {
+                document.getElementById('base64-result').innerHTML =
+                    '<div class="error">✗ Base64解码失败: ' + e.message + '</div>';
+            }
+        }
+
+        function testUrlEncode() {
+            try {
+                const input = $('#url-test-input').val();
+                UrlTool.encodeText(input, Utils);
+                const result = $('#url-output-text').val();
+                document.getElementById('url-result').innerHTML =
+                    '<div class="success">✓ URL编码成功</div>' +
+                    '<div>结果: <code>' + result + '</code></div>';
+            } catch (e) {
+                document.getElementById('url-result').innerHTML =
+                    '<div class="error">✗ URL编码失败: ' + e.message + '</div>';
+            }
+        }
+
+        function testUrlDecode() {
+            try {
+                const input = $('#url-test-input').val();
+                UrlTool.decodeText(input, Utils);
+                const result = $('#url-output-text').val();
+                document.getElementById('url-result').innerHTML =
+                    '<div class="success">✓ URL解码成功</div>' +
+                    '<div>结果: <code>' + result + '</code></div>';
+            } catch (e) {
+                document.getElementById('url-result').innerHTML =
+                    '<div class="error">✗ URL解码失败: ' + e.message + '</div>';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!-- 头部组件 -->
+<header class="header">
+    <div style="max-width: 100%; margin: 0 auto; padding: 0 1rem; padding-top: 0.75rem; padding-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center;">
+            <button id="toggle-sidebar" style="display: none; margin-right: 1rem; color: #4b5563; cursor: pointer;" class="mobile-only">
+                <i class="fa fa-bars" style="font-size: 1.25rem;"></i>
+            </button>
+            <div style="display: flex; align-items: center; gap: 0.5rem;" class="mobile-only">
+                <div style="background: linear-gradient(135deg, var(--primary), var(--accent)); color: white; padding: 0.25rem; border-radius: 0.25rem;">
+                    <i class="fa fa-wrench"></i>
+                </div>
+                <h1 style="font-size: 1.125rem; font-weight: 700; color: var(--dark);" data-i18n="brand">DevToolBox</h1>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.25rem;" class="desktop-only">
+                <span style="font-size: 0.875rem; color: #6b7280;" data-i18n="current-tool">当前工具:</span>
+                <span id="current-tool-name" style="font-size: 0.875rem; font-weight: 500;" data-i18n="json-formatter">JSON格式化</span>
+            </div>
+        </div>
+        <!-- 右侧预留空间 -->
+        <div style="display: flex; align-items: center;">
+            <!-- 可以在这里添加其他头部元素 -->
+        </div>
+    </div>
+</header>

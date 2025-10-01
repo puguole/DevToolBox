@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64功能测试</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/i18n.js"></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/tools.js"></script>
+</head>
+<body>
+    <h1>Base64功能测试</h1>
+    <div>
+        <h2>测试文本</h2>
+        <textarea id="test-input" rows="5" cols="50">Hello, World! 你好，世界！</textarea>
+        <br>
+        <button onclick="testBase64Encode()">测试编码</button>
+        <button onclick="testBase64Decode()">测试解码</button>
+        <button onclick="testBase64AutoDetect()">测试自动检测</button>
+    </div>
+    <div>
+        <h2>测试结果</h2>
+        <textarea id="test-output" rows="10" cols="50" readonly></textarea>
+    </div>
+
+    <script>
+        // 模拟语言管理器
+        window.LanguageManager = {
+            getText: function(key) {
+                return key;
+            }
+        };
+
+        // 初始化Base64工具
+        $(document).ready(function() {
+            Base64Tool.init(Utils);
+        });
+
+        function testBase64Encode() {
+            const input = $('#test-input').val();
+            Base64Tool.encodeText(input, Utils);
+            const result = $('#base64-output-text').val();
+            $('#test-output').val('编码结果:\n' + result);
+        }
+
+        function testBase64Decode() {
+            const input = $('#test-input').val();
+            Base64Tool.decodeText(input, Utils);
+            const result = $('#base64-output-text').val();
+            $('#test-output').val('解码结果:\n' + result);
+        }
+
+        function testBase64AutoDetect() {
+            const input = $('#test-input').val();
+            Base64Tool.autoProcess(input, Utils);
+            const result = $('#base64-output-text').val();
+            $('#test-output').val('自动检测处理结果:\n' + result);
+        }
+    </script>
+</body>
+</html>

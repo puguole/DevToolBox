@@ -1,0 +1,127 @@
+<!-- Base64编码工具 -->
+<div id="base64" class="tool-section" style="display: none;">
+    <div class="tool-header">
+        <h2 style="font-size: 1.25rem; font-weight: 700; display: flex; align-items: center;">
+            <i class="fa fa-exchange" style="color: var(--primary); margin-right: 0.5rem;"></i>
+            <span data-i18n="base64-encoder">Base64编码</span>
+        </h2>
+        <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.25rem;" data-i18n="base64-desc">Base64编码/解码，支持文本和文件，实时转换</p>
+    </div>
+
+    <div class="tool-content">
+        <!-- 模式选择 -->
+        <div style="margin-bottom: 1.5rem;">
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                <button class="mode-btn active" data-mode="encode" style="padding: 0.5rem 1rem; background-color: var(--primary); color: white; border: none; border-radius: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <i class="fa fa-arrow-right" style="margin-right: 0.375rem;"></i>
+                    <span data-i18n="encode">编码</span>
+                </button>
+                <button class="mode-btn" data-mode="decode" style="padding: 0.5rem 1rem; background-color: #f3f4f6; color: #374151; border: none; border-radius: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <i class="fa fa-arrow-left" style="margin-right: 0.375rem;"></i>
+                    <span data-i18n="decode">解码</span>
+                </button>
+            </div>
+
+            <!-- 输入类型选择 -->
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <label style="display: flex; align-items: center; gap: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <input type="radio" name="input-type" value="text" checked style="margin: 0;">
+                    <span data-i18n="text-input">文本输入</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <input type="radio" name="input-type" value="file" style="margin: 0;">
+                    <span data-i18n="file-input">文件输入</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- 文本输入区域 -->
+        <div id="text-input-area">
+            <div class="responsive-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                <!-- 输入 -->
+                <div>
+                    <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;">
+                        <span class="input-label" data-i18n="input-text">输入文本</span>
+                    </label>
+                    <textarea id="base64-input" class="form-textarea" placeholder="请输入要编码的文本..." style="height: 200px; resize: vertical;"></textarea>
+                    <div style="margin-top: 0.5rem; font-size: 0.75rem; color: #6b7280;">
+                        <span class="char-count">0</span> 字符 | <span class="text-bytes">0</span> 字节
+                    </div>
+                </div>
+
+                <!-- 输出 -->
+                <div>
+                    <label style="display: flex; align-items: center; justify-content: space-between; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;">
+                        <span class="output-label" data-i18n="output-text">输出结果</span>
+                        <button id="base64-copy" class="btn-outline" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                            <i class="fa fa-copy" style="margin-right: 0.25rem;"></i>
+                            <span data-i18n="copy">复制</span>
+                        </button>
+                    </label>
+                    <textarea id="base64-output" class="form-textarea" readonly style="height: 200px; resize: vertical; background-color: #f9fafb;"></textarea>
+                    <div style="margin-top: 0.5rem; font-size: 0.75rem; color: #6b7280;">
+                        <span class="output-count">0</span> 字符
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 文件输入区域 -->
+        <div id="file-input-area" style="display: none;">
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; font-size: 0.875rem; font-weight: 500; color: #374151; margin-bottom: 0.5rem;" data-i18n="select-file">选择文件</label>
+                <div style="border: 2px dashed #d1d5db; border-radius: 0.5rem; padding: 2rem; text-align: center; background-color: #f9fafb; transition: all 0.2s ease;" id="file-drop-zone">
+                    <i class="fa fa-cloud-upload" style="font-size: 2rem; color: #9ca3af; margin-bottom: 0.5rem;"></i>
+                    <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 0.5rem;" data-i18n="drag-file-hint">拖拽文件到此处或点击选择</p>
+                    <input type="file" id="base64-file" style="display: none;" multiple>
+                    <button type="button" id="file-select-btn" class="btn-outline" style="padding: 0.5rem 1rem;">
+                        <i class="fa fa-folder-open" style="margin-right: 0.375rem;"></i>
+                        <span data-i18n="select-file-btn">选择文件</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 文件列表 -->
+            <div id="file-list" style="display: none;"></div>
+        </div>
+
+        <!-- 选项 -->
+        <div style="background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
+            <h3 style="font-size: 0.875rem; font-weight: 600; color: #374151; margin-bottom: 0.75rem;" data-i18n="options">选项</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem;">
+                <label style="display: flex; align-items: center; gap: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <input type="checkbox" id="base64-url-safe" style="margin: 0;">
+                    <span data-i18n="url-safe-mode">URL安全模式</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <input type="checkbox" id="base64-no-wrap" style="margin: 0;">
+                    <span data-i18n="no-line-wrap">不换行</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 0.375rem; cursor: pointer; font-size: 0.875rem;">
+                    <input type="checkbox" id="base64-auto-detect" checked style="margin: 0;">
+                    <span data-i18n="auto-detect">自动检测</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+            <button id="base64-convert" class="btn-primary">
+                <i class="fa fa-exchange" style="margin-right: 0.5rem;"></i>
+                <span class="convert-btn-text" data-i18n="encode">编码</span>
+            </button>
+            <button id="base64-example" class="btn-secondary">
+                <i class="fa fa-file-text" style="margin-right: 0.5rem;"></i>
+                <span data-i18n="load-example">加载示例</span>
+            </button>
+            <button id="base64-swap" class="btn-secondary">
+                <i class="fa fa-exchange" style="margin-right: 0.5rem;"></i>
+                <span data-i18n="swap-input-output">交换输入输出</span>
+            </button>
+            <button id="base64-clear" class="btn-outline">
+                <i class="fa fa-trash" style="margin-right: 0.5rem;"></i>
+                <span data-i18n="clear">清空</span>
+            </button>
+        </div>
+    </div>
+</div>

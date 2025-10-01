@@ -1,0 +1,44 @@
+<!-- 全局组件 -->
+<!-- 语言切换按钮 -->
+<div style="position: fixed; top: 1.25rem; right: 1.25rem; z-index: 40; display: flex; gap: 0.5rem;">
+    <button id="lang-zh" style="background-color: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 0.375rem; font-size: 0.875rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); border: none; cursor: pointer;">中文</button>
+    <button id="lang-en" style="background-color: #e5e7eb; color: #374151; padding: 0.25rem 0.75rem; border-radius: 0.375rem; font-size: 0.875rem; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); border: none; cursor: pointer;">English</button>
+</div>
+
+<!-- 加载指示器 -->
+<div id="loader" class="loader hidden">
+    <div style="display: flex; flex-direction: column; align-items: center;">
+        <div class="loader-spinner"></div>
+        <p style="margin-top: 1rem; color: var(--primary); font-weight: 500;" data-i18n="processing">处理中...</p>
+    </div>
+</div>
+
+<!-- 通知提示 -->
+<div id="notification" class="notification">
+    <i id="notification-icon" class="fa fa-check-circle" style="margin-right: 0.5rem;"></i>
+    <span id="notification-text" data-i18n="operation-success">操作成功</span>
+</div>
+
+<!-- 历史记录模态框 -->
+<div id="history-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                <h3 class="modal-title" data-i18n="history">历史记录</h3>
+                <p style="font-size: 0.75rem; color: #6b7280; margin: 0;" data-i18n="history-hint">仅保留最近10条记录</p>
+            </div>
+            <button class="modal-close" onclick="closeHistoryModal()">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div id="history-list" class="history-list">
+                <!-- 历史记录项将动态插入这里 -->
+            </div>
+            <div id="history-empty" class="history-empty" style="display: none;">
+                <i class="fa fa-history" style="font-size: 3rem; color: #d1d5db; margin-bottom: 1rem;"></i>
+                <p data-i18n="no-history">暂无历史记录</p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Base64 Tool</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="pages/assets/js/utils.js"></script>
+    <script src="pages/assets/js/i18n.js"></script>
+    <script src="pages/assets/js/tools.js"></script>
+</head>
+<body>
+    <div id="base64">
+        <!-- Include the base64 tool HTML -->
+        <div id="text-input-area">
+            <textarea id="base64-input"></textarea>
+            <div>
+                <span class="char-count">0</span> 字符 | <span class="text-bytes">0</span> 字节
+            </div>
+        </div>
+        <textarea id="base64-output"></textarea>
+        <div>
+            <span class="output-count">0</span> 字符
+        </div>
+        <button id="base64-example">加载示例</button>
+        <button id="base64-convert">编码</button>
+        <button id="base64-swap">交换输入输出</button>
+        <button id="base64-clear">清空</button>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Simple test to see if Base64Tool initializes without error
+            try {
+                Base64Tool.init({
+                    showNotification: function(msg, isError) { console.log(msg); },
+                    copyToClipboard: function(text) { console.log('Copied:', text); },
+                    formatFileSize: function(bytes) { return bytes + ' bytes'; }
+                });
+                console.log('Base64Tool initialized successfully!');
+            } catch (error) {
+                console.error('Error initializing Base64Tool:', error);
+            }
+        });
+    </script>
+</body>
+</html>
